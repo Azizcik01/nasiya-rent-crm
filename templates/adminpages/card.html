@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | Card{% endblock title %}
+{% block pagetitle %}Kartalar ro'yhati {% endblock pagetitle %}
+{% block page_title %}Card{% endblock page_title %}
+
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Kartalar</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Nom</th>
+                <th>Raqam | Mask</th>
+                <th>Yaroqlilik muddati</th>
+                <th>Balans</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for i in roots %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.owner }} 
+                  {% if i.name == 'Rent Card Admin' %}
+                  <span class="badge bg-primary">Asosiy karta</span>
+                  {% endif %}
+                </td>
+                <td>{{ i.name }}</td>
+                <td>{{ i.mask }}</td>
+                <td>{{ i.expire }}</td>
+                <td>{{ i.balance }} so'm | 
+                  <a class="btn btn-warning btn-circle btn-sm" title="Kartaga pul qoshish" data-toggle="modal" data-target="#modal-default-{{ i.id }}">
+                    <i class="fas fa-credit-card "></i>
+                  </a>
+                </td>
+                <td>
+                    <a class="btn btn-success btn-circle btn-sm" title='Karta malumotlarini korish ' href="{% url "info_cards" pk=i.id %}">
+                      <i class="fas fa-info"></i>
+                    </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if root %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Karta malumotlari</h3>
+        </div> 
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+                <div class="card-body">
+                  <div class="col-8 card-primary">
+                    <div class="card card-info">
+                        <div class="position-relative p-3 bg-gray" style="height: 200px">
+                          <div class="ribbon-wrapper">
+                            <div class="ribbon bg-primary">
+                              RentCard
+                            </div>
+                          </div>
+                          <i class="fas fa-id-card">  Karta nomi : {{ root.name }} </i><br/>
+                          <br/><br/><br/><br/>
+                          Karta Balans: {{ root.balance }} so'm
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-body">
+                  <table class="table table-bordered">
+                    <thead>                  
+                      <tr>
+                        <th>FIO</th>
+                        <th>{{ root.owner.fio }}</th>
+                      </tr>                  
+                      <tr>
+                        <th>Phone</th>
+                        <th>{{ root.owner.phone }}</th>
+                      </tr>                  
+                      <tr>
+                        <th>Karta nomi</th>
+                        <th>{{ root.name }}</th>
+                      </tr>                   
+                      <tr>
+                        <th>Karta raqam</th>
+                        <th>{{ root.raqam }}</th>
+                      </tr> 
+                    </thead>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url "cards" %}" class="btn btn-primary">Ortga qaytish</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% for i in roots %}
+<div class="modal fade" id="modal-default-{{ i.id }}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">{{i.name}} ni kartasiga pul qo'shish qoshish</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="modal-title">{{ error }}</h6>
+          <form action="{% url "plus_cards" pk=i.id %}" method='post'>
+              {% csrf_token %}
+              <div class="form-group">
+                <label class="col-form-label" for="inputSuccess">Summa: </label>
+                <input type="text" name="balans">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+

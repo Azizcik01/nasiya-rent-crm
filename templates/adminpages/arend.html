@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | Arenda{% endblock title %}
+{% block pagetitle %}Arendalar ro'yhati{% endblock pagetitle %}
+{% block page_title %} arenda {% endblock page_title %}
+
+{% block content %}
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Arendalar</h3>
+            </div>
+            {% if error %}
+                <h3 class="btn btn-danger btn-circle btn-sm float-center:">{{ error }}</h3>
+            {% endif %}
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>N</th>
+                            <th>Mijoz</th>
+                            <th>Mashina</th>
+                            <th>Mashina holati</th>
+                            <th>Davlat Raqam</th>
+                            <th>Olingan sana</th>
+                            <th>Qaytib olinadigan sana</th>
+                            <th>Summa</th>
+                            <th>To'lov turi</th>
+                            <th>Buyurtma holati</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in roots %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ x.user.phone }}</td>
+                                <td>{{ x.car.name }}</td>
+                                <td>{{ x.car.status }}</td>
+                                <td>{{ x.car.raqam }}</td>
+                                <td>{{ x.date_from }}</td>
+                                <td>{{ x.date_to }}</td>
+                                <td>{{ x.summa }}</td>
+                                <td>{{ x.pay_type }}</td>
+                                <td>
+                                    {% if x.status == False %}
+                                    <a href="{% url "chek_arend" status='on' pk=x.id %}" title="Sizning buyurtmangiz ko'rib chiqimoqda!"
+                                    class="btn btn-primary btn-circle btn-sm float-center:">
+                                    <i class="fas fa-info"></i>
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url "chek_arend" status='off' pk=x.id %}" title="Buyurtma qabul qilindi"
+                                     class="btn btn-success btn-circle btn-sm float-center:">
+                                    <i class="fas fa-check-circle "></i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock content %}
+
+

@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | User{% endblock title %}
+{% block pagetitle %}Foydalanuvchilar ro'yhati{% endblock pagetitle %}
+{% block page_title %} user {% endblock page_title %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+        <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Foydalanuvchilar</h3>
+
+        <a class="btn btn-warning btn-circle btn-sm float-right" href = "{% url "add-user" status='form' %}">
+            Foydalanuvchi qoshish
+        </a>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>FIO</th>
+                <th>Username</th>
+                <th>Telefon</th>
+                <th>Passport</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for x in roots %}
+                <tr>
+                <td>{{ forloop.counter }}
+                    {% if x.user_type == 1 %} <h6 class="btn btn-primary btn-sm" >Admin</h6>{% endif %}</td>
+                <td>
+                    {{ x.fio }}
+                    {% if x == request.user %}
+                    <span class="badge bg-primary">Bu siz</span>
+                    {% endif %}
+                </td>
+                <td>{{ x.username }}</td>
+                <td>{{ x.phone }}</td>
+                <td>{{ x.ps_seria }}</td>
+                <td>
+                    <a  class="btn btn-success btn-circle btn-sm float-center:""" 
+                        href = "{% url "edit-user" status="form" pk=x.id %}"
+                        title="{{ x.username }} edit " >
+                    <i class="fas fa-pen"></i>
+                    </a>
+                    <a  class="btn btn-primary btn-circle btn-sm float-center:"  
+                        data-toggle="modal" data-target="#modal-default-{{ x.id }}" 
+                        title="{{ x.username }} change_password " >
+                    <i class="fas fa-key"></i>
+                    </a>
+                    {% if x.is_active %}
+                    <a href="{% url "user_ban" status='ban' pk=x.id %}" class="btn btn-warning btn-circle btn-sm float-center:" 
+                        title="{{ x.username }} ban 🚫 " >
+                    <i class="fas fa-ban"></i>
+                    {% else %}
+                    <a href="{% url "user_ban" status='antiban' pk=x.id %}" class="btn btn-secondary btn-circle btn-sm float-center:" 
+                        title="{{ x.username }} ban ✅" >
+                    <i class="fas fa-ban"></i>
+                    {% endif %}
+                    </a>
+                    <a  class="btn btn-danger btn-circle btn-sm float-center:"  
+                        data-toggle="modal" data-target="#modal-delete-{{ x.id }}" 
+                        title="{{ x.username }} delete " >
+                    <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+  </div>
+</div>
+
+{% if status == 'form' %}
+<div class="col-12">
+    <div class="card">
+    <div class="card-body">
+        <form method='post'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.fio %}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.username %}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.ps_seria %}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.phone %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.g_seria %}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.g_yil_from %}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.g_yil_to %}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.g_ctg %}
+                    </div>
+                </div>  
+            </div>
+            <div class="row">
+                {% if not root %}
+                    <div class="col-sm-3" >
+                        <div class="form-group">
+                            {% bootstrap_field form.password %}
+                        </div>
+                    </div> 
+                {% endif %}
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {% bootstrap_field form.user_type %}
+                    </div>
+                </div>    
+            </div>   
+            <button type="submit" class="btn btn-primary">Saqlash</button>
+            <a class="btn btn-secondary" href="{% url "users" %}" > Bekor qilish</a>
+        </form>
+    </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% for x in roots %}
+    <div class="modal fade" id="modal-default-{{ x.id }}">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Parol almashtirish</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url "chp" id=x.id %}" method='post'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputSuccess">{{ x.username }} uchun yangi parol: </label>
+                      <input type="text" name="pas">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+                      <button type="submit" class="btn btn-primary">Saqlash</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+{% endfor %}
+
+
+
+
+{% for x in roots %}
+    <div class="modal fade" id="modal-delete-{{ x.id }}">
+        <div class="modal-dialog modal-delete">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Delete User</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Rostdan ham {{ x.fio }}ni o'chirmoqchimisiz?&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+            <a href='{% url "del-user" status="del" pk=x.id %}' type="button" class="btn btn-primary">O'chirish</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+{% endfor %}
+
+
+{% endblock content %}

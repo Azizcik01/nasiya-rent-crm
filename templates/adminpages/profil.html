@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | Profil{% endblock title %}
+{% block pagetitle %}Amin Profil {% endblock pagetitle %}
+{% block page_title %}profil{% endblock page_title %}
+
+
+{% block content %}
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card card-primary card-outline">
+                    <div class="card-body box-profile">
+                    <div class="text-center">
+                        <img class="profile-user-img img-fluid img-circle"
+                            src="{% static 'ddist/img/user4-128x128.jpg' %}"
+                            alt="User profile picture">
+                    </div>
+
+                    <h3 class="profile-username text-center">FIO: {{ root.fio }}</h3>
+
+                    <p class="text-muted text-center">Username: {{ root.username }}</p>
+
+                    <ul class="list-group list-group-unbordered mb-3">
+                        <li class="list-group-item">
+                        <b>Telefon raqam: </b> <a class="float-right">{{ root.phone }}</a>
+                        </li>
+                        <li class="list-group-item">
+                        <b>Pasport seria: </b> <a class="float-right">{{ root.ps_seria }}</a>
+                        </li>
+                        <li class="list-group-item">
+                        <b>User type: </b> <a class="float-right">{{ root.user_type }}</a>
+                        </li>
+                    </ul>
+
+                    
+                        
+                    <div class="card-footer float-right">
+                        <a href="{% url "home" %}" class="btn btn-primary">Bosh sahifa</a>
+                    </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>  
+            <div class="col-md-9">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ root.fio }} ning karta malumotlari</h3>
+                            </div> 
+                            <div class="card-body">
+                                <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <div class="col-8 card-primary">
+                                        <div class="card card-info">
+                                            <div class="position-relative p-3 bg-gray" style="height: 200px">
+                                                <div class="ribbon-wrapper">
+                                                <div class="ribbon bg-primary">
+                                                    RentCard
+                                                </div>
+                                                </div>
+                                                <i class="fas fa-id-card">  Karta nomi : {{ card.name }} </i><br/>
+                                                <br/><br/><br/><br/>
+                                                Karta Balans: {{ card.balance }} so'm
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card-body">
+                                        <table class="table table-bordered">
+                                        <thead>                  
+                                            <tr>
+                                            <th>FIO</th>
+                                            <th>{{ card.owner.fio }}</th>
+                                            </tr>                  
+                                            <tr>
+                                            <th>Phone</th>
+                                            <th>{{ card.owner.phone }}</th>
+                                            </tr>                  
+                                            <tr>
+                                            <th>Karta nomi</th>
+                                            <th>{{ card.name }}</th>
+                                            </tr>                   
+                                            <tr>
+                                            <th>Karta raqam</th>
+                                            <th>{{ card.raqam }}</th>
+                                            </tr> 
+                                        </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="card-footer float-right">
+                                <a href="{% url "change_coin" status='form' %}" class="btn btn-primary">Kartadan kartaga pul o'tkazma </a>
+                            </div>
+                        </div>        
+
+                        
+                        {% if status == 'form' %}
+                            <div class="card card-primary">   
+                                    <form method='post' action="{% url "change_coin" status='form' %}" >
+                                        {% csrf_token %}
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="karta1">Karta raqamini kiriting: </label>
+                                                <input type="text" name="karta_raqam" 
+                                                    class="form-control" id="karta1"
+                                                    {% if karta %}
+                                                    value = "{{ karta.raqam }}"
+                                                    {% else %}
+                                                    placeholder="xxxx xxxx xxxx xxxx"
+                                                    required
+                                                    pattern="[0-9 ]*"
+                                                    oninput="formatCreditCardNumber(this)" >
+                                                    {% endif %}
+                                            </div>
+                                            <button type="submit" class="btn btn-primary float-right">Qidirish</button>
+                                            {% if karta %}
+                                                <h3 class="profile-username text-center">{{ karta.name }}</h3>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label for="summa1">Summa kiriting: </label>
+                                                        <input type="text" name="summa" class="form-control" id="summa1" placeholder="Summa: ">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary float-right">O'tkazish</button>
+                                                </div>
+                                            {% endif %}
+                                        {% if error %}
+                                            <h3 class="profile-username text-center">{{ error }}</h3>
+                                        {% endif %}
+                                            <div class="card-footer">
+                                                <a href="{% url "a_profil" %}" class="btn btn-primary float-left">Ortga</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                            </div>
+                        {% endif %}
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+
+
+
+
+<script>
+        function formatCreditCardNumber(input) {
+          let cardNumber = input.value.replace(/\D/g, '').substring(0, 16); // Remove non-digits and limit to 16 digits
+          let formattedCardNumber = '';
+          for (let i = 0; i < cardNumber.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+              formattedCardNumber += ' '; // Insert a space every 4 digits
+            }
+            formattedCardNumber += cardNumber[i];
+          }
+          input.value = formattedCardNumber; // Update the input field with the formatted value
+        }
+</script>
+        
+        
+
+
+    
+{% endblock %}

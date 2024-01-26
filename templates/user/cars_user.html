@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | Car{% endblock title %}
+{% block pagetitle %}Avtomibillar ro'yhati{% endblock pagetitle %}
+{% block page_title %} Cars {% endblock page_title %}
+
+{% block content %}
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Avtomibillar</h3>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>N</th>
+                            <th>Nom</th>
+                            <th>Brand</th>
+                            <th>Davlat Raqam</th>
+                            <th>Kategoriya</th>
+                            <th>Narx</th>
+                            <th>Holat</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in cars %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ x.name }}</td>
+                                <td>{{ x.brand }}</td>
+                                <td>{{ x.raqam }}</td>
+                                <td>{{ x.ctg }}</td>
+                                <td>{{ x.narx }}</td>
+                                <td>{{ x.status }}</td>
+                                <td>
+                                    <a title="{{ x.name }} malumotlarini korish" href="{% url "car-info-user" pk=x.id %}"
+                                    class="btn btn-primary btn-circle btn-sm float-center:">
+                                    <i class="fas fa-info"></i>
+                                    </a>
+                                    <a title="{{ x.name }} Buyurtma berish" href="{% url "arend_car" pk=x.id %}"
+                                     class="btn btn-success btn-circle btn-sm float-center:">
+                                    <i class="fas fa-briefcase "></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    {% if conf %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method='post'>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil nomi:</label> <br>
+                                <input type="text" value="{{ car }}" >
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil buyurtmachisi:</label> <br>
+                                <input type="text" value="{{ user }}" >
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibilni necha kunga olmoqchisiz:</label> <br>
+                                <input type="text" name='kun' >
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                {% bootstrap_field form.pay_type %}
+                            </div>
+                        </div>
+                    </div> 
+                    <button type="submit" class="btn btn-primary">Buyurtma qilish</button>
+                    <a class="btn btn-secondary" href="{% url "cars-user" %}" >Bekor qilish</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if root %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil nomi:</label> <br> {{ root.name }} 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil brendi:</label> <br> {{ root.brand }} 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil kategoriya:</label> <br> {{ root.ctg }} 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil davlat raqami:</label> <br> {{ root.raqam }} 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil yili:</label> <br> {{ root.yil }} 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil narxi:</label> <br> {{ root.narx }} 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil xarakteristikasi:</label> <br> {{ root.xk }} 
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Avtomibil holati:</label> <br> {{ root.status }} 
+                            </div>
+                        </div>
+                    </div>  
+                    <a href="{% url "arend_car" pk=root.id %}" class="btn btn-primary">Buyurtma berish</a>
+                    <a class="btn btn-secondary" href="{% url "cars-user" %}" > Bekor qilish</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+{% endblock content %}
+
+

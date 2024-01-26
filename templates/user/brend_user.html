@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | Category{% endblock title %}
+{% block pagetitle %}Brendlar | Kategoriyalar {% endblock pagetitle %}
+{% block page_title %}Brend{% endblock page_title %}
+
+
+{% block content %}
+    
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Brendlar</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for i in brands %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.name }}</td>
+                <td>
+                  <a href="{% url "ubrend-car" conf='1' pk=i.id %}" class="btn btn-success btn-circle btn-sm">
+                   <i class="fas fa-info"></i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>  
+<!-- ..............................................................................  -->
+    <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Kategoriya</h3>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for x in ctgs %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ x.name }}</td>
+                    <td>
+                        <a href="{% url "uctg-car" conf='2' pk=x.id %}" class="btn btn-success btn-circle btn-sm">
+                        <i class="fas fa-info"></i>
+                        </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- ..............................................................................  -->
+<!-- ..............................................................................  -->
+<!-- ..............................................................................  -->
+{% if conf %}
+
+<div class="col-12">
+  <div class="card">
+      <div class="card-header">
+          <h3 class="card-title">Avtomibillar</h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+              <thead>
+                  <tr>
+                      <th>N</th>
+                      <th>Nom</th>
+                      <th>Brand</th>
+                      <th>Davlat Raqam</th>
+                      <th>Kategoriya</th>
+                      <th>Narx</th>
+                      <th>Holat</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for x in cars %}
+                      <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{ x.name }}</td>
+                          <td>{{ x.brand }}</td>
+                          <td>{{ x.raqam }}</td>
+                          <td>{{ x.ctg }}</td>
+                          <td>{{ x.narx }}</td>
+                          <td>{{ x.status }}</td>
+                          <td>
+                              <a title="{{ x.name }} malumotlarini korish" class="btn btn-primary btn-circle btn-sm float-center:">
+                              <i class="fas fa-info"></i>
+                              </a>
+                              <a title="{{ x.name }} Buyurtma berish" href="{% url "arend_car" pk=x.id %}"
+                               class="btn btn-success btn-circle btn-sm float-center:">
+                              <i class="fas fa-briefcase "></i>
+                              </a>
+                          </td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+    </div>
+    <a href="{% url "brend-user" %}" class="btn btn-success btn-sm float-right:">Ortga qaytish</a>
+</div>
+
+
+{% endif %}
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+

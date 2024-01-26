@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Rent_Car | Category{% endblock title %}
+{% block pagetitle %}Brendlar | Kategoriyalar {% endblock pagetitle %}
+{% block page_title %}Brend_Ctg{% endblock page_title %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Brendlar</h3>
+          <a class="btn btn-warning btn-circle btn-sm float-right" data-toggle="modal" data-target="#modal-primary">
+              Brend qoshish
+          </a>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for i in brands %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.name }}</td>
+                <td>
+                    <a class="btn btn-success btn-circle btn-sm" data-toggle="modal" data-target="#modal-primary-{{ i.id }}">
+                      <i class="fas fa-pen"></i>
+                    </a>
+                    <a class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#modal-sm-{{ i.id }}">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- ..............................................................................  -->
+    <!-- ..............................................................................  -->
+    <!-- ..............................................................................  -->
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Kategoriya</h3>
+          <a class="btn btn-warning btn-circle btn-sm float-right" data-toggle="modal" data-target="#modal-default">
+              Category qoshish
+          </a>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for x in roots %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ x.name }}</td>
+                <td>
+                    <a class="btn btn-success btn-circle btn-sm" data-toggle="modal" data-target="#modal-default-{{ x.id }}">
+                     <i class="fas fa-pen"></i>
+                    </a>
+                    <a class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#modal-cm-{{ x.id }}">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- ..............................................................................  -->
+    <!-- ..............................................................................  -->
+    <!-- ..............................................................................  -->
+    <!--  edit  brand  -->
+    {% for i in brands %}
+      <div class="modal fade" id="modal-primary-{{ i.id }}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Brend o'zgartirish</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url "edit-brand" key=2 pk=i.id %}" method='post'>
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label class="col-form-label" for="inputSuccess">Brend nomi:</label>
+                          <input type="text" name='name' value="{{ i.name }}">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+                        <button type="submit" class="btn btn-primary">Saqlash</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+      </div>
+    {% endfor %}
+    <!--  delete  brand  -->
+    {% for i in brands %}
+      <div class="modal fade" id="modal-sm-{{ i.id }}">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Delete Brend</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>{{ i.name }} ni o'chirmoqchimisiz?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+              <a class="btn btn-primary" href="{% url "del-brand" key=2 pk=i.id %}" >Ha</a>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+    {% endfor %}
+    <!--  add  brand  -->
+    <div class="modal fade" id="modal-primary">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Brend qoshish</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url "add-brand" key=2 %}" method='post'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputSuccess">Brend nomi:</label>
+                      <input type="text" name="name">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+                      <button type="submit" class="btn btn-primary">Saqlash</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- ..............................................................................  -->
+    <!-- ..............................................................................  -->
+    <!-- ..............................................................................  -->
+    <!--  edit  ctg  -->
+    {% for x in roots %}
+      <div class="modal fade" id="modal-default-{{ x.id }}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Category o'zgartirish</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url "edit-ctg" key=1 pk=x.id %}" method='post'>
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label class="col-form-label" for="inputSuccess">Category nomi:</label>
+                          <input type="text" name='name' value="{{ x.name }}">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+                        <button type="submit" class="btn btn-primary">Saqlash</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+      </div>
+    {% endfor %}
+    <!--  delete ctg  -->
+    {% for x in roots %}
+      <div class="modal fade" id="modal-cm-{{ x.id }}">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Delete Category</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>{{ x.name }} ni o'chirmoqchimisiz?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+              <a class="btn btn-primary" href="{% url "del-ctg" key=1 pk=x.id %}" >Ha</a>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+    {% endfor %}
+    <!--  add  ctg  -->
+    <div class="modal fade" id="modal-default">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Category qoshish</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form action="{% url "add-ctg" key=1 %}" method='post'>
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label class="col-form-label" for="inputSuccess">Category nomi:</label>
+                    <input type="text" name="name">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                  </div>
+              </form>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
